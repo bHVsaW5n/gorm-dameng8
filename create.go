@@ -150,9 +150,10 @@ func Create(db *gorm.DB) {
 									insertTo.SetMapIndex(reflect.ValueOf(stmt.Schema.PrioritizedPrimaryField.DBName), reflect.ValueOf(insertID))
 								case reflect.Struct:
 									// 如果切片或数组内是结构体的话，就把自增id复制给主键
-									_, isZero := stmt.Schema.PrioritizedPrimaryField.ValueOf(insertTo)
+
+									_, isZero := stmt.Schema.PrioritizedPrimaryField.ValueOf(stmt.Context, insertTo)
 									if isZero {
-										stmt.Schema.PrioritizedPrimaryField.Set(insertTo, insertID)
+										stmt.Schema.PrioritizedPrimaryField.Set(stmt.Context, insertTo, insertID)
 									}
 								}
 							}
@@ -161,9 +162,9 @@ func Create(db *gorm.DB) {
 							// 如果是map的话，给map新增一个key value
 							insertTo.SetMapIndex(reflect.ValueOf(stmt.Schema.PrioritizedPrimaryField.DBName), reflect.ValueOf(insertID))
 						case reflect.Struct:
-							_, isZero := stmt.Schema.PrioritizedPrimaryField.ValueOf(insertTo)
+							_, isZero := stmt.Schema.PrioritizedPrimaryField.ValueOf(stmt.Context, insertTo)
 							if isZero {
-								stmt.Schema.PrioritizedPrimaryField.Set(insertTo, insertID)
+								stmt.Schema.PrioritizedPrimaryField.Set(stmt.Context, insertTo, insertID)
 							}
 						}
 
@@ -176,7 +177,7 @@ func Create(db *gorm.DB) {
 								func(field *gormSchema.Field) {
 									switch insertTo.Kind() {
 									case reflect.Struct:
-										if err = field.Set(insertTo, stmt.Vars[boundVars[field.Name]].(sql.Out).Dest); err != nil {
+										if err = field.Set(stmt.Context, insertTo, stmt.Vars[boundVars[field.Name]].(sql.Out).Dest); err != nil {
 											db.AddError(err)
 										}
 									case reflect.Map:
