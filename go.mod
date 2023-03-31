@@ -6,7 +6,7 @@ require (
 	gitee.com/chunanyong/dm v1.8.3
 	github.com/emirpasic/gods v1.12.0
 	github.com/thoas/go-funk v0.9.1
-	gorm.io/gorm v1.22.4
+	gorm.io/gorm v1.24.7-0.20230306060331-85eaf9eeda11
 )
 
 require (
